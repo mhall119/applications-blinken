@@ -1,0 +1,57 @@
+name: <%= name %>
+version: <%= version %>
+<%= { 'summary' => summary }.to_yaml.sub('---', '') %>
+<%= { 'description' => description }.to_yaml.sub('---', '') %>
+
+apps:
+  <% apps.each do |app| %>
+    <%= app.to_yaml.sub('---', '').gsub("\n", "\n  ")%>
+  <% end %>
+
+parts:
+  <%= name %>:
+    plugin: nil
+    build-packages:
+      - shared-mime-info
+    stage-packages:
+      - <%= name %>
+    <% stagedepends.each do |stagedepends| %>
+      <%= stagedepends.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
+    <% end %>
+    <% stagerecommends.each do |stagrecommends| %>
+      <%= stagerecommends.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
+    <% end %>
+    <% stagesuggests.each do |stagesuggests| %>
+      <%= stagesuggests.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
+    <% end %>
+    filesets:
+      binaries:
+        - usr/games
+      libraries:
+        - usr/lib/*
+      headers:
+        - usr/include/*
+        - usr/lib/*/cmake/*
+    stage:
+      - etc
+      - $libraries
+      - $binaries
+      - usr/share/*
+    snap:
+      - etc
+      - $libraries
+      - $binaries
+      - usr/share/*
+  environment:
+    plugin: copy
+    files:
+      qt5-launch: bin/qt5-launch
+  integration:
+    plugin: nil
+    stage-packages:
+      <% stageintegration.each do |stageintegration| %>
+        <%= stageintegration.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
+      <% end %>
+    snap:
+      - usr/lib/*
+      - usr/share/*

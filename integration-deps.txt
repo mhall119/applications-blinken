@@ -1,0 +1,4 @@
+breeze-icon-theme
+plasma-integration
+hicolor-icon-theme
+phonon4qt5-backend-gstreamer
