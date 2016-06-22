@@ -35,3 +35,4 @@ Changelog:
     - Fixed web browser launch for help
     - Improved automation for snapcraft.yaml file generation.
     - More debugging of phonon gstreamer plugins non-functionality.
+    - Added snapcraft-kubuntu for builds that work with cleanbuild.

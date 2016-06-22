@@ -38,8 +38,8 @@ class Snap
         
     def initialize(name)
       @name = name
-      @command = "qt5-launch usr/games/#{name}"
-      @plugs = %w(x11 unity7 home opengl pulseaudio)      
+      @command = "qt5-launch usr/bin/#{name}"
+      @plugs = %w(x11 unity7 home opengl, pulseaudio)      
     end
 
     def to_yaml(options = nil)
@@ -49,11 +49,6 @@ class Snap
 
   attr_accessor :name
   attr_accessor :stagedepends
-  attr_accessor :stagerecommends
-  attr_accessor :stagesuggests
-  attr_accessor :integrationdepends
-  attr_accessor :integrationrecommends
-  attr_accessor :integrationsuggests
   attr_accessor :version
   attr_accessor :summary
   attr_accessor :description
@@ -64,7 +59,7 @@ class Snap
   end
 end
 
-runtimedeps = Array["plasma-integration", "pulseaudio", "rekonq", "phonon4qt5-backend-gstreamer"]
+runtimedeps = Array["plasma-integration"]
 
 
 
@@ -73,9 +68,9 @@ runtimedeps = Array["plasma-integration", "pulseaudio", "rekonq", "phonon4qt5-ba
 snap = Snap.new
 snap.name = "blinken"
 snap.version = '16.04.1'
-snap.stagedepends = `apt-cache depends blinken | awk '/Depends:/{print$2}' | sed -e 's/Depends:/""/'`.split("\n")
-snap.stagedepends += `apt-cache depends blinken | awk '/Recommends:/{print$2}' | sed -e '/Recommends:s/d'`.split("\n")
-snap.stagedepends += `apt-cache depends blinken | awk '/Suggests:/{print$2}' | sed -e '/Suggests:s/d'`.split("\n")
+snap.stagedepends = `apt-cache depends #{snap.name} | awk '/Depends:/{print$2}' | sed -e 's/Depends:/""/'`.split("\n")
+snap.stagedepends += `apt-cache depends #{snap.name} | awk '/Recommends:/{print$2}' | sed -e '/Recommends:s/d'`.split("\n")
+snap.stagedepends += `apt-cache depends #{snap.name} | awk '/Suggests:/{print$2}' | sed -e '/Suggests:s/d'`.split("\n")
 
 runtimedeps.each do |dep|
     snap.stagedepends.push dep      
@@ -96,7 +91,7 @@ snap.stagedepends.sort!
 p snap.stagedepends
 
 desktopfile = "org.kde.#{snap.name}.desktop"
-
+helpdesktopfile = "org.kde.Help.desktop"
 
 ### appstream
 require 'fileutils'
@@ -125,11 +120,12 @@ end
 
 
 desktop_url = "parts/#{snap.name}/install/usr/share/applications/#{desktopfile}"
-
+help_desktop_url = "parts/#{snap.name}/install/usr/share/applications/#{helpdesktopfile}"
 
 FileUtils::mkdir_p "setup/gui/"
 FileUtils.cp(icon_url, 'setup/gui/icon') if icon_url
 FileUtils.cp(desktop_url, "setup/gui/#{desktopfile}") if desktop_url
+FileUtils.cp(help_desktop_url, "setup/gui/#{helpdesktopfile}") if help_desktop_url
 system('snapcraft stage')
 system('snapcraft build')
 system('snapcraft prime')
