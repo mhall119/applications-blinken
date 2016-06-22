@@ -52,7 +52,9 @@ export QT_SELECT=snappy-qt5
 
 # Qt Libs
 export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH/qt5/libs:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH/gstreamer-1.0:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH/pulseaudio:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH:$LD_LIBRARY_PATH
 
 # Qt Modules
 export QT_PLUGIN_PATH=$SNAP/usr/lib/$ARCH/qt5/plugins
@@ -68,6 +70,7 @@ export XDG_SESSION_DESKTOP=ubuntu
 export XDG_CURRENT_DESKTOP=kde
 export QT_QPA_PLATFORMTHEME=appmenu-qt5
 export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
+export BROWSER=rekonq
 export XDG_RUNTIME_DIR=$SNAP_USER_DATA/.local-$SNAP_VERSION/var/run/$UID
 mkdir -p $XDG_RUNTIME_DIR
 

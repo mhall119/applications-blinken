@@ -1,0 +1,258 @@
+name: blinken
+version: 16.04.1
+
+summary: A memory enhancement game
+
+
+description: "<p>Blinken is based on an electronic game released in 1978, which challenges
+  players to remember sequences of increasing length. On the face of the device, there
+  are 4 different color buttons, each one with their own distinctive sound. These
+  buttons light up randomly, creating the sequence that the player must then recall.
+  If the player is successful in remembering the sequence of lights in the correct
+  order, they advance to the next stage, where an identical sequence with one extra
+  step is presented. If they are incorrect, the game is lost, and the player must
+  start again from the beginning. The goal is to get a high score - each step in the
+  sequence is worth one point, so correct entry of a sequence of 8 lights is worth
+  8 points on the high score table.</p>"
+
+
+apps:
+  
+    
+  blinken:
+    command: qt5-launch usr/games/blinken
+    plugs:
+    - x11
+    - unity7
+    - home
+    - opengl
+    - pulseaudio
+  
+  
+
+parts:
+  blinken:
+    plugin: nil
+    build-packages:
+      - shared-mime-info
+    stage-packages:
+      - blinken
+    
+      - adduser
+    
+      - breeze
+    
+      - fonts-noto-hinted
+    
+      - fonts-oxygen
+    
+      - gstreamer1.0-alsa
+    
+      - gstreamer1.0-plugins-base
+    
+      - gstreamer1.0-plugins-good
+    
+      - gstreamer1.0-plugins-ugly
+    
+      - gstreamer1.0-pulseaudio
+    
+      - kde-baseapps-bin
+    
+      - kde-runtime
+    
+      - kget
+    
+      - khelpcenter
+    
+      - libasound2
+    
+      - libasound2-plugins
+    
+      - libc6
+    
+      - libcap2
+    
+      - libdbus-1-3
+    
+      - libfftw3-single3
+    
+      - libgl1-mesa-glx
+    
+      - libglib2.0-0
+    
+      - libgstreamer-plugins-base1.0-0
+    
+      - libgstreamer1.0-0
+    
+      - libkactivities6
+    
+      - libkcmutils4
+    
+      - libkdecore5
+    
+      - libkdeui5
+    
+      - libkdewebkit5
+    
+      - libkf5completion5
+    
+      - libkf5configcore5
+    
+      - libkf5configgui5
+    
+      - libkf5configwidgets5
+    
+      - libkf5coreaddons5
+    
+      - libkf5crash5
+    
+      - libkf5dbusaddons5
+    
+      - libkf5guiaddons5
+    
+      - libkf5i18n5
+    
+      - libkf5iconthemes5
+    
+      - libkf5jobwidgets5
+    
+      - libkf5kiocore5
+    
+      - libkf5kiofilewidgets5
+    
+      - libkf5kiowidgets5
+    
+      - libkf5notifications5
+    
+      - libkf5waylandclient5
+    
+      - libkf5widgetsaddons5
+    
+      - libkf5windowsystem5
+    
+      - libkf5xmlgui5
+    
+      - libkio5
+    
+      - libkparts4
+    
+      - libltdl7
+    
+      - liborc-0.4-0
+    
+      - libpam-systemd
+    
+      - libphonon4qt5-4
+    
+      - libpulse0
+    
+      - libqoauth1
+    
+      - libqt4-dbus
+    
+      - libqt4-network
+    
+      - libqt4-xml
+    
+      - libqt5core5a
+    
+      - libqt5dbus5
+    
+      - libqt5gui5
+    
+      - libqt5gui5-gles
+    
+      - libqt5opengl5
+    
+      - libqt5opengl5-gles
+    
+      - libqt5svg5
+    
+      - libqt5widgets5
+    
+      - libqt5x11extras5
+    
+      - libqtcore4
+    
+      - libqtgui4
+    
+      - libqtwebkit4
+    
+      - libsndfile1
+    
+      - libsolid4
+    
+      - libspeexdsp1
+    
+      - libstdc++6
+    
+      - libsystemd0
+    
+      - libtdb1
+    
+      - libudev1
+    
+      - libwebrtc-audio-processing-0
+    
+      - libx11-6
+    
+      - libx11-xcb1
+    
+      - libxcb1
+    
+      - libxcursor1
+    
+      - lsb-base
+    
+      - paman
+    
+      - paprefs
+    
+      - pavucontrol
+    
+      - pavumeter
+    
+      - phonon-backend-gstreamer-common
+    
+      - phonon4qt5-backend-gstreamer
+    
+      - plasma-integration
+    
+      - pulseaudio
+    
+      - pulseaudio-module-x11
+    
+      - pulseaudio-utils
+    
+      - rekonq
+    
+      - rtkit
+    
+      - ttf-sjfonts
+    
+      - udev
+    
+    filesets:
+      binaries:
+        - usr/games
+        - usr/bin
+      libraries:
+        - lib/*
+        - usr/lib/*
+      headers:
+        - usr/include/*
+        - usr/lib/*/cmake/*
+    stage:
+      - etc
+      - $libraries
+      - $binaries
+      - usr/share/*
+    snap:
+      - etc
+      - $libraries
+      - $binaries
+      - usr/share/*
+  environment:
+    plugin: copy
+    files:
+      qt5-launch: bin/qt5-launch

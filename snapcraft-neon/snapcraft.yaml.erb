@@ -18,16 +18,12 @@ parts:
     <% stagedepends.each do |stagedepends| %>
       <%= stagedepends.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
     <% end %>
-    <% stagerecommends.each do |stagrecommends| %>
-      <%= stagerecommends.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
-    <% end %>
-    <% stagesuggests.each do |stagesuggests| %>
-      <%= stagesuggests.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
-    <% end %>
     filesets:
       binaries:
         - usr/games
+        - usr/bin
       libraries:
+        - lib/*
         - usr/lib/*
       headers:
         - usr/include/*
@@ -46,12 +42,3 @@ parts:
     plugin: copy
     files:
       qt5-launch: bin/qt5-launch
-  integration:
-    plugin: nil
-    stage-packages:
-      <% stageintegration.each do |stageintegration| %>
-        <%= stageintegration.to_yaml.sub('---', '-').gsub("\n", '').sub("...", '').gsub("\n", '')%>
-      <% end %>
-    snap:
-      - usr/lib/*
-      - usr/share/*

@@ -39,7 +39,7 @@ class Snap
     def initialize(name)
       @name = name
       @command = "qt5-launch usr/games/#{name}"
-      @plugs = %w(x11 unity7 home opengl network network-bind network-manager)      
+      @plugs = %w(x11 unity7 home opengl pulseaudio)      
     end
 
     def to_yaml(options = nil)
@@ -51,7 +51,9 @@ class Snap
   attr_accessor :stagedepends
   attr_accessor :stagerecommends
   attr_accessor :stagesuggests
-  attr_accessor :stageintegration
+  attr_accessor :integrationdepends
+  attr_accessor :integrationrecommends
+  attr_accessor :integrationsuggests
   attr_accessor :version
   attr_accessor :summary
   attr_accessor :description
@@ -62,7 +64,7 @@ class Snap
   end
 end
 
-
+runtimedeps = Array["plasma-integration", "pulseaudio", "rekonq", "phonon4qt5-backend-gstreamer"]
 
 
 
@@ -71,22 +73,28 @@ end
 snap = Snap.new
 snap.name = "blinken"
 snap.version = '16.04.1'
-snap.stagedepends = `apt-cache depends blinken | awk '/Depends:/{print$2}' | sed -e '/Depends:s/d'`.split("\n")
-snap.stagerecommends = `apt-cache depends blinken | awk '/Recommends:/{print$2}' | sed -e '/Recommends:s/d'`.split("\n")
-snap.stagesuggests = `apt-cache depends blinken | awk '/Suggests:/{print$2}' | sed -e '/Suggests:s/d'`.split("\n")
-integrationdeps = Array[]
-File.open("integration-deps.txt", "r") do |f|
-  f.each_line do |line|
-    integrationdeps.push line
-  end
+snap.stagedepends = `apt-cache depends blinken | awk '/Depends:/{print$2}' | sed -e 's/Depends:/""/'`.split("\n")
+snap.stagedepends += `apt-cache depends blinken | awk '/Recommends:/{print$2}' | sed -e '/Recommends:s/d'`.split("\n")
+snap.stagedepends += `apt-cache depends blinken | awk '/Suggests:/{print$2}' | sed -e '/Suggests:s/d'`.split("\n")
+
+runtimedeps.each do |dep|
+    snap.stagedepends.push dep      
+    runtimedep = `apt-cache depends #{dep} | awk '/Depends:/{print$2}' | sed -e '/</ d' | sed -e 's/ |Depends:/""/' | sed -e 's/  Depends:/""/'`.split("\n") 
+    runtimedep.each do |dep|
+        snap.stagedepends |= [dep]   
+    end
+    runtimerec = `apt-cache depends #{dep} | awk '/Recommends:/{print$2}' | sed -e '/</ d' | sed -e 's/ |Recommends:/""/' | sed -e 's/  Depends:/""/'`.split("\n") 
+    runtimerec.each do |dep|
+        snap.stagedepends |= [dep]   
+    end     
+    runtimesug = `apt-cache depends #{dep} | awk '/Suggests:/{print$2}' | sed -e '/</ d' | sed -e 's/ |Suggests:/""/' | sed -e 's/  Depends:/""/'`.split("\n") 
+    runtimesug.each do |dep|
+        snap.stagedepends |= [dep]   
+    end       
 end
-integrationdeps.each do |dep|
-  snap.stageintegration = `apt-cache depends phonon4qt5-backend-gstreamer | awk '/Depends:/{print$2}' | sed -e '/</ d' | sed -e '/|/ d'`.split("\n")
-end
+snap.stagedepends.sort!
 p snap.stagedepends
-p snap.stagerecommends
-p snap.stagesuggests
-p snap.stageintegration
+
 desktopfile = "org.kde.#{snap.name}.desktop"
 
 
@@ -103,10 +111,7 @@ component = db.component_by_id("#{desktopfile}")
 snap.summary = component.summary
 snap.description = component.description
 snap.apps = [Snap::App.new("#{snap.name}")]
-FileUtils::mkdir_p "snapcraft-neon"
-File.write('snapcraft-neon/snapcraft.yaml', snap.render)
-FileUtils.cp('qt5-launch', 'snapcraft-neon')
-Dir.chdir('snapcraft-neon')
+File.write('snapcraft.yaml', snap.render)
 
 system('snapcraft pull') || raise
 
