@@ -20,7 +20,7 @@ apps:
   
     
   blinken:
-    command: qt5-launch usr/bin/blinken
+    command: qt5-launch usr/games/blinken
     plugs:
     - x11
     - unity7
@@ -111,6 +111,7 @@ parts:
     filesets:
       binaries:
         - usr/bin
+        - usr/games
       libraries:
         - lib/*
         - usr/lib/*
